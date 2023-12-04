@@ -127,7 +127,6 @@ class Parameters:
             writer.writerow(data[0])
             # rest of the file
             writer.writerow(data[1])
-            print("Wrote data :)")
 
     def __str__(self):
         return {

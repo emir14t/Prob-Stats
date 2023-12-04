@@ -1,3 +1,4 @@
+import csv
 import math
 from abc import ABC, abstractmethod
 from StatsVoodoo import Stats, Parameters
@@ -15,6 +16,7 @@ class Model(ABC):
         self.beta1Bound = -1    # uninitialized
         self.beta0Interval = [-1, -1]   # uninitialized
         self.beta1Interval = [-1, -1]   # uninitialized
+        self.SSE = -1 # uninitialized
 
     def initiate(self, XData, YData):
         self.parameters = Parameters(XData=XData, YData=YData)
@@ -34,6 +36,50 @@ class Model(ABC):
     @abstractmethod
     def lowerBoundModel(self):
         pass
+
+    def export(self, filePath):
+        data = [
+            ["beta0", "beta1", "beta0 interval (+/-)", "beta1 interval (+/-)"],
+            [self.beta0, self.beta1, (self.beta0Interval[1] - self.beta0Interval[0]) / 2, (self.beta1Interval[1] - self.beta1Interval[0]) / 2]
+        ]
+        with open(filePath, 'w') as f:
+            writer = csv.writer(f)
+            # header
+            writer.writerow(data[0])
+            # rest of the file
+            writer.writerow(data[1])
+
+    def exportVarianceTable(self, targetYVals, XVals, filePath=''):
+        """
+         __________________________________________________________________________________________________________
+        |source de variation | somme des carrés | nb de deg de liberté | moyenne des carrés | F_0                  |
+        |--------------------|------------------|----------------------|-------------------|----------------------|
+        |regression          |SSR (déjà calculé)|        1             | somme/deg. de lib.| regression / résidus |
+        |--------------------|------------------|----------------------|-------------------|----------------------|
+        |résidus             |SSE (à calculer)  |       n-2            | somme/deg. de lib | Null                 |
+        |--------------------|------------------|----------------------|-------------------|----------------------|
+        |total               | SSR + SSE        |       n-1            | Null              | Null                 |
+        |--------------------|------------------|----------------------|-------------------|----------------------|
+
+        """
+        modelFunction = self.model(self.XColumnName)
+        self.SSE = sum([(targetYVals[i] - modelFunction(XVals[i])) ** 2 for i in range(len(XVals))])
+        averageY = sum(targetYVals) / len(targetYVals)
+        SSR = sum([(modelFunction(x) - averageY) ** 2 for x in XVals])
+        data = [
+            ["source de variation", "somme des carrés", "nb de deg de liberté", "moyenne des carrés", "F_0"],
+            ["regression", SSR, 1, SSR, SSR / (self.SSE / (len(XVals) - 2))],
+            ["résidus", self.SSE, (len(XVals) - 2), self.SSE / (len(XVals) - 2), None],
+            ["total", SSR + self.SSE, (len(XVals) - 1), None, None]
+        ]
+
+        with open(filePath, 'w') as f:
+            writer = csv.writer(f)
+            # header
+            writer.writerow(data[0])
+            # rest of the file
+            for i in range(1, len(data)):
+                writer.writerow(data[i])
 
 
     def __gt__(self, other):
@@ -116,9 +162,9 @@ class ModelType2(Model, ABC):
         """
         Y = ß0 * X^ß1 * e^𝛆
         lnY = lnß0 + (lnX) * ß1
-        lnY = [lnß0 + ln(ß0 interval)] + (lnX) * [ß1 + ln(ß1int)]
+        lnY = [lnß0 + ln(ß0 interval)] + (lnX) * [ß1 + ß1int]
 
-        Y = (ß0 * ß0int) * X ^ (ß1 + ln(ß1int))
+        Y = (ß0 * ß0int) * X ^ (ß1 + ß1int)
         """
 
         return lambda X: self.beta0Interval[1] * (X ** self.beta1Interval[1])

@@ -1,6 +1,6 @@
 import math
 
-from scipy.stats import shapiro, t
+from scipy.stats import shapiro, t, fisher_exact
 
 
 class Hypothesis:

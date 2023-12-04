@@ -78,6 +78,9 @@ class DataInterpreter:
             plt.title(f"{type(model)} regression comp")
             plt.show()
 
+            model.export(f"{type(model)}.csv")
+            model.exportVarianceTable(tempDF["IR"].tolist(), tempDF[model.XColumnName].tolist(), f"{type(model)}-varianceTable.csv")
+
     def testResidues(self):
         Ydata = self.dataSet['IR'].tolist()
         for model in self.models:
