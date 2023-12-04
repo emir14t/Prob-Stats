@@ -90,7 +90,7 @@ class DataInterpreter:
             # hypothesis  test:
             print(f"for model {type(model)}")
             hypothesis = Hypothesis()
-            hypothesis.test(Xdata)
+            hypothesis.fTest(model.F_0, 1, len(Xdata))
             print("\n====================\n")
 
             tempDF = self.dataSet.copy(True)
@@ -103,4 +103,6 @@ class DataInterpreter:
 
             plt.title(f"Residues of {type(model)}")
             plt.show()
+
+
 

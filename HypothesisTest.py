@@ -1,6 +1,6 @@
 import math
 
-from scipy.stats import shapiro, t, fisher_exact
+from scipy.stats import shapiro, t, f
 
 
 class Hypothesis:
@@ -44,3 +44,13 @@ class Hypothesis:
         print(f"got t-value of {tVal} for reference t-value with 95% certainty {refTVal}")
 
         return tVal, refTVal
+
+    def fTest(self, value, degOfFreedom1, degOfFreedom2):
+
+        fDist = 1 - f.cdf(value, degOfFreedom1, degOfFreedom2)
+        if fDist < self.alpha:
+            print("Null hypothesis can be considered")
+        else:
+            print("Null hypothesis can be rejected")
+
+        print(f"got p-value of {fDist}")

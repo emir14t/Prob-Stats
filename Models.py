@@ -16,7 +16,8 @@ class Model(ABC):
         self.beta1Bound = -1    # uninitialized
         self.beta0Interval = [-1, -1]   # uninitialized
         self.beta1Interval = [-1, -1]   # uninitialized
-        self.SSE = -1 # uninitialized
+        self.SSE = -1   # uninitialized
+        self.F_0 = -1   # uninitialized
 
     def initiate(self, XData, YData):
         self.parameters = Parameters(XData=XData, YData=YData)
@@ -66,9 +67,10 @@ class Model(ABC):
         self.SSE = sum([(targetYVals[i] - modelFunction(XVals[i])) ** 2 for i in range(len(XVals))])
         averageY = sum(targetYVals) / len(targetYVals)
         SSR = sum([(modelFunction(x) - averageY) ** 2 for x in XVals])
+        self.F_0 = SSR / (self.SSE / (len(XVals) - 2))
         data = [
             ["source de variation", "somme des carrés", "nb de deg de liberté", "moyenne des carrés", "F_0"],
-            ["regression", SSR, 1, SSR, SSR / (self.SSE / (len(XVals) - 2))],
+            ["regression", SSR, 1, SSR, self.F_0],
             ["résidus", self.SSE, (len(XVals) - 2), self.SSE / (len(XVals) - 2), None],
             ["total", SSR + self.SSE, (len(XVals) - 1), None, None]
         ]
