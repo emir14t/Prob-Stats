@@ -30,7 +30,7 @@ if __name__ == '__main__':
     dataP1.plotHistogram('IR', 'Distribution of IR in all materials')
     dataP1.plotNormalProbabilityPlot('IR', 'Normal plot for IR values in the entire set')
     test = Hypothesis()
-    test.test(dataP1.dataSet['T'].tolist())
+    test.test(dataP1.dataSet['IR'].tolist())
     # dataP1.plotBox('IR', 'Box Plot for material m0 and m1')
     graph = Grapher.BoxPlot('DevoirD_A23.csv')
     graph.data = dataP1.dataSet

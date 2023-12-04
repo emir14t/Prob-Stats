@@ -38,7 +38,7 @@ class Stats:
     def export(self):
         data = [
             ["Quartile 1", "Médiane", "Quartile 3", "Moyenne", "Écart-type", "Intervale de confiance (95%)"],
-            [self.Q1, self.median, self.Q1, self.mean, self.stD, self.CI]
+            [self.Q1, self.median, self.Q3, self.mean, self.stD, self.CI]
         ]
         with open(self.location, 'w') as f:
             writer = csv.writer(f)

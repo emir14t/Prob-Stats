@@ -10,7 +10,8 @@ class Hypothesis:
         self.alpha = alpha
 
     def test(self, dataSet):
-        dontCare, pVal = shapiro(dataSet)
+        w, pVal = shapiro(dataSet)
+        print(w)
         self.isNullHypothesis = pVal > self.alpha
         if self.isNullHypothesis:
             print(f"You can accept H0, needed a p-value more than {self.alpha}, got {pVal}")
