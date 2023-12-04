@@ -26,6 +26,7 @@ if __name__ == '__main__':
     # Partie 1 a)
     dataP1 = di('DevoirD_A23.csv', 0)
     dataP1.dataSet = pd.read_csv('DevoirD_A23.csv')
+    """
     dataP1.plotBox('IR', 'Box Plot all IR')
     dataP1.plotHistogram('IR', 'Distribution of IR in all materials')
     dataP1.plotNormalProbabilityPlot('IR', 'Normal plot for IR values in the entire set')
@@ -54,11 +55,11 @@ if __name__ == '__main__':
     test.tTest(dataY0, dataY1)
 
     # Partie 2 c)
-
+    """
     # we choose to work with m0 (can also work with m1)
     models = [Model1(), Model2(), Model3(), Model4(), Model5(), Model6()]
     for model in models:
-        dataM0.addModel(model)
+        dataP1.addModel(model)
 
-    dataM0.evaluateAllModels()
-    dataM0.testResidues()
+    dataP1.evaluateAllModels()
+    dataP1.testResidues()

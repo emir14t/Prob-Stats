@@ -105,7 +105,7 @@ class ModelType2(Model, ABC):
         self.beta1 = self.parameters.beta1
 
         self.beta0Interval = [self.beta0 / self.beta0Bound, self.beta0 * self.beta0Bound]
-        self.beta1Interval = [self.beta1 - math.log(self.beta1Bound), (self.beta1 + math.log(self.beta1Bound))]
+        self.beta1Interval = [self.beta1 - self.beta1Bound, (self.beta1 + self.beta1Bound)]
 
         def Y(X):
             return self.beta0 * (X ** self.beta1)
